@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NurseryCare — Payments · Phase 2</title>
+<title>NurseryCare — Payment Portal</title>
 <style>
 * { box-sizing:border-box; margin:0; padding:0; }
 :root {
@@ -18,15 +18,6 @@
   --r:12px; --rs:8px; --sh:0 1px 4px rgba(0,0,0,.08);
 }
 body { font-family:'Segoe UI',system-ui,sans-serif; background:var(--bg); color:var(--text); font-size:14px; display:flex; flex-direction:column; height:100vh; overflow:hidden; }
-
-/* PUSH NOTIFICATION */
-.push { position:fixed; top:16px; right:16px; background:#1A1A2E; color:white; border-radius:var(--r); padding:14px 18px 14px 14px; display:flex; align-items:flex-start; gap:12px; box-shadow:0 8px 32px rgba(0,0,0,.25); z-index:9999; max-width:310px; transform:translateX(360px); opacity:0; transition:all .4s cubic-bezier(.34,1.56,.64,1); }
-.push.show { transform:translateX(0); opacity:1; }
-.push-icon { width:32px; height:32px; background:var(--red); border-radius:8px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
-.push-app { font-size:10px; color:rgba(255,255,255,.5); margin-bottom:3px; text-transform:uppercase; letter-spacing:.4px; }
-.push-title { font-size:13px; font-weight:700; margin-bottom:2px; }
-.push-body { font-size:12px; color:rgba(255,255,255,.7); line-height:1.45; }
-.push-close { position:absolute; top:10px; right:12px; background:none; border:none; color:rgba(255,255,255,.35); font-size:18px; cursor:pointer; line-height:1; }
 
 /* HEADER */
 .hdr { height:52px; background:var(--white); border-bottom:1px solid var(--border); display:flex; align-items:center; padding:0 16px; gap:12px; flex-shrink:0; box-shadow:var(--sh); }
@@ -45,16 +36,7 @@ body { font-family:'Segoe UI',system-ui,sans-serif; background:var(--bg); color:
 .ni.active { color:var(--teal); font-weight:600; background:var(--teal-light); }
 .ni.active::before { content:''; position:absolute; left:0; top:0; bottom:0; width:3px; background:var(--teal); border-radius:0 3px 3px 0; }
 .ni svg { width:16px; height:16px; flex-shrink:0; }
-.main { flex:1; overflow-y:auto; padding:20px 24px; display:flex; flex-direction:column; gap:16px; }
-
-/* VIEW SWITCHING */
-.view { display:none; flex-direction:column; gap:16px; }
-.view.active { display:flex; }
-
-/* PHASE BANNER */
-.phase-banner { background:linear-gradient(135deg,#5BBFBA,#028090); border-radius:var(--rs); padding:10px 18px; display:flex; align-items:center; gap:10px; }
-.phase-banner span { color:white; font-size:13px; font-weight:600; }
-.phase-pill { background:rgba(255,255,255,.25); color:white; font-size:11px; font-weight:700; padding:2px 10px; border-radius:20px; }
+.main { flex:1; overflow-y:auto; padding:20px 24px; display:flex; flex-direction:column; gap:14px; }
 
 /* BALANCE CARD */
 .bal-card { background:var(--white); border-radius:var(--r); padding:18px 24px; box-shadow:var(--sh); border:1px solid var(--border); display:flex; align-items:center; gap:28px; }
@@ -65,68 +47,74 @@ body { font-family:'Segoe UI',system-ui,sans-serif; background:var(--bg); color:
 .bdiv { width:1px; height:40px; background:var(--border); }
 .pout-btn { margin-left:auto; background:var(--teal); color:white; border:none; border-radius:var(--rs); padding:9px 16px; font-size:13px; font-weight:600; cursor:pointer; }
 
-/* ── AI INSIGHT CARD (Phase 2 — smarter) ── */
-.insight-card {
+/* ── LEAN ALERT BAR (matches screenshot 2 exactly) ── */
+.alert-bar {
+  background:#FFFBEB;
+  border:1px solid #FDE68A;
+  border-radius:var(--rs);
+  padding:11px 16px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  cursor:pointer;
+  transition:background .15s;
+}
+.alert-bar:hover { background:#FEF3C7; }
+.alert-dot { width:8px; height:8px; background:var(--red); border-radius:50%; flex-shrink:0; animation:pulse 2s infinite; }
+@keyframes pulse { 0%,100%{ box-shadow:0 0 0 0 rgba(239,68,68,.4); } 50%{ box-shadow:0 0 0 5px rgba(239,68,68,0); } }
+.alert-text { flex:1; font-size:13px; color:var(--text); }
+.alert-text strong { color:var(--text); }
+.alert-sub { color:var(--muted); font-size:12px; }
+.alert-btn { background:#F97316; color:white; border:none; border-radius:var(--rs); padding:7px 14px; font-size:12px; font-weight:600; cursor:pointer; white-space:nowrap; flex-shrink:0; transition:background .15s; }
+.alert-btn:hover { background:#EA6C00; }
+
+/* ── AI INPUT BAR (matches screenshot 1) ── */
+.ai-input-bar {
   background:var(--white);
-  border-radius:var(--r);
-  border:1px solid #FECACA;
-  box-shadow:0 2px 8px rgba(239,68,68,.1);
-  overflow:hidden;
-}
-.insight-top {
-  padding:18px 20px;
+  border:1.5px solid #DDD6FE;
+  border-radius:var(--rs);
+  padding:10px 14px;
   display:flex;
   align-items:center;
-  gap:18px;
+  gap:10px;
+  cursor:text;
 }
-.insight-icon { width:44px; height:44px; background:var(--red-light); border-radius:10px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
-.insight-body { flex:1; }
-.insight-title { font-size:14px; font-weight:700; margin-bottom:4px; display:flex; align-items:center; gap:8px; }
-.ai-label { background:linear-gradient(135deg,var(--teal-light),#EAF9F7); color:var(--teal); font-size:10px; font-weight:700; padding:2px 8px; border-radius:20px; border:1px solid var(--teal-mid); }
-.insight-desc { font-size:13px; color:var(--muted); line-height:1.5; }
-.insight-stats { display:flex; flex-direction:column; align-items:flex-end; gap:2px; flex-shrink:0; }
-.insight-amt { font-size:26px; font-weight:800; color:var(--red); line-height:1; }
-.insight-items { font-size:12px; color:var(--muted); }
-.insight-cta { background:var(--red); color:white; border:none; border-radius:var(--rs); padding:10px 18px; font-size:13px; font-weight:600; cursor:pointer; white-space:nowrap; transition:background .15s; flex-shrink:0; }
-.insight-cta:hover { background:#DC2626; }
+.ai-input-placeholder { flex:1; font-size:13px; color:#94A3B8; }
+.ai-input-actions { display:flex; align-items:center; gap:8px; }
+.ai-action-chip { font-size:12px; color:var(--muted); background:var(--bg); border:1px solid var(--border); border-radius:6px; padding:3px 10px; cursor:pointer; white-space:nowrap; }
+.ai-action-chip:hover { background:var(--border); }
 
-/* AI quick wins strip */
-.insight-strip {
-  border-top:1px solid var(--border);
-  background:#FAFCFF;
-  padding:10px 20px;
-  display:flex;
-  align-items:center;
-  gap:20px;
-  overflow-x:auto;
-}
-.strip-item { display:flex; align-items:center; gap:7px; white-space:nowrap; font-size:12px; color:var(--muted); flex-shrink:0; }
-.strip-dot { width:7px; height:7px; border-radius:50%; flex-shrink:0; }
-.strip-name { font-weight:600; color:var(--text); }
-.strip-action { color:var(--teal); font-weight:600; }
-.strip-sep { width:1px; height:16px; background:var(--border); flex-shrink:0; }
-
-.pulse { width:8px; height:8px; background:var(--red); border-radius:50%; display:inline-block; animation:pulse 2s infinite; }
-@keyframes pulse { 0%,100%{ box-shadow:0 0 0 0 rgba(239,68,68,.4); } 50%{ box-shadow:0 0 0 6px rgba(239,68,68,0); } }
-
-/* RECOVERY VIEW */
-.back-btn { display:inline-flex; align-items:center; gap:6px; color:var(--muted); font-size:13px; cursor:pointer; padding:6px 12px; border-radius:var(--rs); border:1px solid var(--border); background:var(--white); transition:all .15s; }
-.back-btn:hover { color:var(--text); }
-.rec-view-title { font-size:18px; font-weight:700; }
-.rec-view-sub { font-size:13px; color:var(--muted); margin-top:2px; }
-
-/* RECOVERY SUMMARY */
-.rec-summary { background:var(--green-light); border:1px solid #BBE5A0; border-radius:var(--rs); padding:12px 16px; display:flex; align-items:center; gap:10px; font-size:13px; }
+/* ── INLINE RECOVERY QUEUE ── */
+.rec-inline { display:flex; flex-direction:column; gap:12px; }
+.rec-inline-header { display:flex; align-items:center; gap:12px; }
+.rec-summary-inline { display:flex; align-items:center; gap:6px; font-size:12px; color:var(--muted); background:var(--green-light); border:1px solid #BBE5A0; border-radius:var(--rs); padding:5px 12px; }
+.close-queue-btn { font-size:12px; color:var(--muted); background:white; border:1px solid var(--border); border-radius:var(--rs); padding:5px 12px; cursor:pointer; transition:all .15s; }
+.close-queue-btn:hover { color:var(--text); border-color:var(--muted); }
 
 /* RECOVERY TABLE CARD */
 .rec-card { background:var(--white); border-radius:var(--r); box-shadow:var(--sh); border:1px solid var(--border); overflow:hidden; }
-.rec-card-header { padding:12px 20px; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:8px; background:#FAFAFA; }
-.ai-chip { background:linear-gradient(135deg,var(--teal-light),#EAF9F7); color:var(--teal); font-size:10px; font-weight:700; padding:2px 10px; border-radius:20px; border:1px solid var(--teal-mid); }
+.rec-card-header { padding:11px 16px; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:8px; background:#FAFAFA; }
+.bulk-btn { display:inline-flex; align-items:center; gap:6px; background:var(--teal); color:white; border:none; border-radius:var(--rs); padding:6px 12px; font-size:12px; font-weight:600; cursor:pointer; transition:all .15s; white-space:nowrap; }
+.bulk-btn:hover { background:#026a78; }
+.bulk-btn:disabled { background:var(--border); color:var(--muted); cursor:default; }
+.recover-sel-btn { display:none; align-items:center; gap:6px; background:var(--teal); color:white; border:none; border-radius:var(--rs); padding:6px 14px; font-size:12px; font-weight:600; cursor:pointer; transition:background .15s; white-space:nowrap; animation:fadeIn .15s ease; }
+.recover-sel-btn:hover { background:#026a78; }
+.recover-sel-btn.visible { display:inline-flex; }
+.sel-count { font-size:12px; color:var(--muted); display:none; }
+.sel-count.visible { display:inline; }
+@keyframes fadeIn { from{opacity:0;transform:translateY(-4px)} to{opacity:1;transform:translateY(0)} }
+.row-check { width:15px; height:15px; accent-color:var(--teal); cursor:pointer; flex-shrink:0; }
+.qt td:first-child { width:36px; padding-right:4px; }
+.qt th:first-child { width:36px; padding-right:4px; }
+.select-all-check { width:15px; height:15px; accent-color:var(--teal); cursor:pointer; }
+.qr.selected td { background:#F0FBFA; }
+.qr.actioned .row-check { visibility:hidden; }
+.ai-chip { background:var(--teal-light); color:var(--teal); font-size:10px; font-weight:700; padding:2px 8px; border-radius:20px; border:1px solid var(--teal-mid); }
 
 /* TABLE */
 .qt { width:100%; border-collapse:collapse; }
-.qt th { padding:9px 14px; text-align:left; font-size:11px; color:var(--muted); font-weight:600; text-transform:uppercase; letter-spacing:.4px; border-bottom:1px solid var(--border); background:#FAFAFA; }
-.qt td { padding:13px 14px; vertical-align:middle; border-bottom:1px solid var(--border); font-size:13px; }
+.qt th { padding:8px 14px; text-align:left; font-size:11px; color:var(--muted); font-weight:600; text-transform:uppercase; letter-spacing:.4px; border-bottom:1px solid var(--border); background:#FAFAFA; }
+.qt td { padding:11px 14px; vertical-align:middle; border-bottom:1px solid var(--border); font-size:13px; }
 .qr:last-child td { border-bottom:none; }
 .qr:hover td { background:#FAFCFF; }
 .qr.actioned td { opacity:.5; }
@@ -134,7 +122,7 @@ body { font-family:'Segoe UI',system-ui,sans-serif; background:var(--bg); color:
 .cemail { font-size:11px; color:var(--muted); }
 
 /* SCORE BAR */
-.score-wrap { display:flex; flex-direction:column; gap:3px; min-width:100px; }
+.score-wrap { display:flex; flex-direction:column; gap:3px; min-width:90px; }
 .score-lbl { font-size:11px; font-weight:700; }
 .score-bg { height:4px; background:var(--border); border-radius:2px; }
 .score-fill { height:4px; border-radius:2px; }
@@ -142,7 +130,7 @@ body { font-family:'Segoe UI',system-ui,sans-serif; background:var(--bg); color:
 .s-mid  .score-lbl { color:#92400E; } .s-mid  .score-fill { background:var(--amber); }
 .s-low  .score-lbl { color:var(--muted); } .s-low  .score-fill { background:#CBD5E1; }
 
-/* REC ACTION */
+/* REC ACTION CHIP */
 .rec-act { font-size:11px; color:var(--teal); background:var(--teal-light); padding:2px 8px; border-radius:20px; white-space:nowrap; display:inline-block; }
 
 /* BADGES */
@@ -152,30 +140,29 @@ body { font-family:'Segoe UI',system-ui,sans-serif; background:var(--bg); color:
 .b-blue   { background:var(--blue-light);   color:#1D4ED8; }
 .b-orange { background:var(--orange-light); color:#C2410C; }
 .b-teal   { background:var(--teal-light);   color:var(--teal); }
-.b-green  { background:var(--green-light);  color:#166534; }
 
 /* BUTTONS */
-.abtn { border:1.5px solid var(--teal); color:var(--teal); background:white; border-radius:var(--rs); padding:7px 14px; font-size:12px; font-weight:600; cursor:pointer; white-space:nowrap; transition:all .15s; }
+.abtn { border:1.5px solid var(--teal); color:var(--teal); background:white; border-radius:var(--rs); padding:6px 12px; font-size:12px; font-weight:600; cursor:pointer; white-space:nowrap; transition:all .15s; }
 .abtn:hover { background:var(--teal); color:white; }
 .abtn.pri { background:var(--teal); color:white; }
-.in-rec { display:inline-flex; align-items:center; gap:5px; background:var(--teal-light); color:var(--teal); font-size:12px; font-weight:600; padding:6px 10px; border-radius:var(--rs); }
+.in-rec { display:inline-flex; align-items:center; gap:5px; background:var(--teal-light); color:var(--teal); font-size:12px; font-weight:600; padding:5px 10px; border-radius:var(--rs); }
 
 /* CONFIRM PANEL */
 .conf-row { display:none; }
 .conf-row.show { display:table-row; }
-.conf-panel { background:linear-gradient(135deg,#E1F5F7,#EAF9F7); border:1px solid var(--teal-mid); border-radius:var(--rs); padding:16px 20px; margin:4px 8px 6px; }
+.conf-panel { background:linear-gradient(135deg,#E1F5F7,#EAF9F7); border:1px solid var(--teal-mid); border-radius:var(--rs); padding:14px 18px; margin:2px 6px 4px; }
 .conf-title { font-weight:700; font-size:14px; margin-bottom:6px; }
-.conf-ai { font-size:12px; color:var(--teal); background:var(--teal-light); border-radius:6px; padding:7px 10px; margin-bottom:10px; display:flex; align-items:flex-start; gap:7px; line-height:1.4; }
-.conf-desc { font-size:13px; color:var(--muted); margin-bottom:14px; line-height:1.55; }
+.conf-ai { font-size:12px; color:var(--teal); background:var(--teal-light); border-radius:6px; padding:6px 10px; margin-bottom:10px; display:flex; align-items:flex-start; gap:6px; line-height:1.4; }
+.conf-desc { font-size:13px; color:var(--muted); margin-bottom:12px; line-height:1.5; }
 .conf-acts { display:flex; gap:8px; }
-.csend { background:var(--teal); color:white; border:none; border-radius:var(--rs); padding:9px 20px; font-size:13px; font-weight:600; cursor:pointer; }
+.csend { background:var(--teal); color:white; border:none; border-radius:var(--rs); padding:8px 18px; font-size:13px; font-weight:600; cursor:pointer; }
 .csend:hover { background:#026a78; }
-.ccancel { background:white; color:var(--muted); border:1px solid var(--border); border-radius:var(--rs); padding:9px 16px; font-size:13px; cursor:pointer; }
+.ccancel { background:white; color:var(--muted); border:1px solid var(--border); border-radius:var(--rs); padding:8px 14px; font-size:13px; cursor:pointer; }
 
 /* AUTOMATION TOGGLE */
-.auto-row { padding:14px 20px; border-top:1px solid var(--border); display:flex; align-items:center; gap:16px; background:#FAFAFA; }
+.auto-row { padding:12px 16px; border-top:1px solid var(--border); display:flex; align-items:center; gap:16px; background:#FAFAFA; }
 .auto-txt { flex:1; }
-.auto-title { font-size:13px; font-weight:600; color:var(--text); }
+.auto-title { font-size:13px; font-weight:600; }
 .auto-sub { font-size:12px; color:var(--muted); margin-top:2px; }
 .tgl-ctrl { width:42px; height:24px; background:var(--border); border-radius:12px; position:relative; cursor:pointer; transition:background .2s; flex-shrink:0; }
 .tgl-ctrl.on { background:var(--teal); }
@@ -184,37 +171,26 @@ body { font-family:'Segoe UI',system-ui,sans-serif; background:var(--bg); color:
 
 /* TXN TABLE */
 .txn-card { background:var(--white); border-radius:var(--r); box-shadow:var(--sh); border:1px solid var(--border); overflow:hidden; }
-.txn-hdr { padding:14px 20px; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:10px; }
+.txn-hdr { padding:12px 20px; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:10px; }
 .filter-tabs { display:flex; gap:2px; background:var(--bg); border-radius:var(--rs); padding:3px; }
 .ftab { padding:5px 12px; border-radius:6px; font-size:12px; font-weight:500; color:var(--muted); cursor:pointer; }
 .ftab.active { background:white; color:var(--text); box-shadow:var(--sh); }
 .txnt { width:100%; border-collapse:collapse; }
-.txnt th { padding:9px 16px; text-align:left; font-size:11px; color:var(--muted); font-weight:600; text-transform:uppercase; letter-spacing:.4px; border-bottom:1px solid var(--border); background:#FAFAFA; }
-.txnt td { padding:12px 16px; font-size:13px; border-bottom:1px solid var(--border); }
+.txnt th { padding:8px 16px; text-align:left; font-size:11px; color:var(--muted); font-weight:600; text-transform:uppercase; letter-spacing:.4px; border-bottom:1px solid var(--border); background:#FAFAFA; }
+.txnt td { padding:11px 16px; font-size:13px; border-bottom:1px solid var(--border); }
 .txnt tr:last-child td { border-bottom:none; }
 .s-set { color:#166534; background:var(--green-light); padding:3px 9px; border-radius:20px; font-size:11px; font-weight:600; }
 .s-chg { color:#92400E; background:var(--amber-light); padding:3px 9px; border-radius:20px; font-size:11px; font-weight:600; }
-.export-btn { margin-left:auto; display:flex; align-items:center; gap:5px; font-size:12px; color:var(--muted); border:1px solid var(--border); background:white; border-radius:var(--rs); padding:6px 12px; cursor:pointer; }
+.export-btn { margin-left:auto; display:flex; align-items:center; gap:5px; font-size:12px; color:var(--muted); border:1px solid var(--border); background:white; border-radius:var(--rs); padding:5px 12px; cursor:pointer; }
 
 /* TOAST */
-.toast { position:fixed; bottom:28px; right:28px; background:#1A1A2E; color:white; padding:12px 20px; border-radius:var(--rs); font-size:13px; font-weight:500; display:flex; align-items:center; gap:8px; box-shadow:0 8px 24px rgba(0,0,0,.2); transform:translateY(80px); opacity:0; transition:all .35s cubic-bezier(.34,1.56,.64,1); z-index:9998; }
+.toast { position:fixed; bottom:28px; right:28px; background:#1A1A2E; color:white; padding:12px 20px; border-radius:var(--rs); font-size:13px; font-weight:500; display:flex; align-items:center; gap:8px; box-shadow:0 8px 24px rgba(0,0,0,.2); transform:translateY(80px); opacity:0; transition:all .35s cubic-bezier(.34,1.56,.64,1); z-index:9999; }
 .toast.show { transform:translateY(0); opacity:1; }
 .tck { width:18px; height:18px; background:var(--green); border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
 ::-webkit-scrollbar { width:6px; } ::-webkit-scrollbar-thumb { background:#CBD5E1; border-radius:3px; }
 </style>
 </head>
 <body>
-
-<!-- PUSH NOTIFICATION -->
-<div class="push" id="push">
-  <div class="push-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
-  <div>
-    <div class="push-app">NurseryCare · Payments</div>
-    <div class="push-title">New failure — Sarah Johnson</div>
-    <div class="push-body">Failed DD · £480 · AI score: High. Best to retry before 10am.</div>
-  </div>
-  <button class="push-close" onclick="this.closest('.push').classList.remove('show')">×</button>
-</div>
 
 <div class="hdr">
   <div class="hdr-logo">
@@ -242,71 +218,198 @@ body { font-family:'Segoe UI',system-ui,sans-serif; background:var(--bg); color:
 
   <main class="main">
 
-    <!-- ═══ PAYMENTS MAIN VIEW ═══ -->
-    <div class="view active" id="view-payments">
+    <!-- BALANCE -->
+    <div class="bal-card">
+      <div class="bi"><div class="bi-label">Payable Funds</div><div class="bi-val" style="color:var(--teal)">£4,347.59</div><div class="bi-sub">Next payout: Friday</div></div>
+      <div class="bdiv"></div>
+      <div class="bi"><div class="bi-label">Pending amount</div><div class="bi-val">£1,240.00</div><div class="bi-sub">Settling in 2–3 days</div></div>
+      <div class="bdiv"></div>
+      <div class="bi"><div class="bi-label">Direct Debit</div><div style="margin-top:6px"><span class="bdg b-teal">Enabled</span></div></div>
+      <button class="pout-btn">Pay out now</button>
+    </div>
 
-      <div class="phase-banner">
-        <span class="phase-pill">Phase 2</span>
-        <span>Rank &amp; Recommend — AI scoring, prioritised queue, proactive alerts</span>
+    <!-- LEAN ALERT BAR -->
+    <div class="alert-bar" onclick="toggleQueue()">
+      <span class="alert-dot"></span>
+      <span class="alert-text">
+        <strong>Revenue at Risk: £<span id="alert-amt">1,840</span> across <span id="alert-count">7</span> items this week</strong>
+        <span class="alert-sub"> · ↑ up from £1,240 last week</span>
+      </span>
+      <button class="alert-btn" id="alert-btn" onclick="event.stopPropagation();toggleQueue()">View Recovery Queue</button>
+    </div>
+
+    <!-- AI INPUT BAR -->
+    <div class="ai-input-bar">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#7C3AED" stroke-width="2" style="flex-shrink:0"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg>
+      <span class="ai-input-placeholder">Ask AI: "Show my revenue trends" or "Create a monthly report"</span>
+      <div class="ai-input-actions">
+        <span class="ai-action-chip">Support</span>
+        <span class="ai-action-chip">Dashboard</span>
+        <span class="ai-action-chip">Favourites</span>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
       </div>
+    </div>
 
-      <!-- BALANCE -->
-      <div class="bal-card">
-        <div class="bi"><div class="bi-label">Payable Funds</div><div class="bi-val" style="color:var(--teal)">£4,347.59</div><div class="bi-sub">Next payout: Friday</div></div>
-        <div class="bdiv"></div>
-        <div class="bi"><div class="bi-label">Pending amount</div><div class="bi-val">£1,240.00</div><div class="bi-sub">Settling in 2–3 days</div></div>
-        <div class="bdiv"></div>
-        <div class="bi"><div class="bi-label">Direct Debit</div><div style="margin-top:6px"><span class="bdg b-teal">Enabled</span></div></div>
-        <button class="pout-btn">Pay out now</button>
-      </div>
+    <!-- INLINE RECOVERY QUEUE (hidden by default) -->
+    <div class="rec-inline" id="rec-inline" style="display:none">
 
-      <!-- AI INSIGHT CARD — Phase 2: smarter, with strip -->
-      <div class="insight-card">
-        <div class="insight-top">
-          <div class="insight-icon">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#EF4444" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-          </div>
-          <div class="insight-body">
-            <div class="insight-title">
-              <span class="pulse"></span>
-              Revenue at Risk
-              <span class="ai-label">✦ AI</span>
-            </div>
-            <div class="insight-desc">7 payments at risk · AI has ranked them by recoverability. 2 items are High score and should be actioned today.</div>
-          </div>
-          <div class="insight-stats">
-            <div class="insight-amt" id="insight-amt">£1,840</div>
-            <div class="insight-items" id="insight-items">7 items at risk</div>
-          </div>
-          <button class="insight-cta" onclick="showView('recovery')">View recovery queue →</button>
+      <div class="rec-inline-header">
+        <div>
+          <div style="font-size:16px;font-weight:700">Recovery Queue</div>
+          <div style="font-size:12px;color:var(--muted);margin-top:2px" id="rec-sub">7 items · £1,840 at risk · ranked by AI recoverability score</div>
         </div>
-        <!-- AI quick-wins strip -->
-        <div class="insight-strip" id="strip">
-          <div class="strip-item">
-            <div class="strip-dot" style="background:var(--green)"></div>
-            <span class="strip-name">Sarah Johnson</span>
-            <span style="color:var(--muted)">·</span>
-            <span>£480 · Failed DD</span>
-            <span style="color:var(--muted)">·</span>
-            <span class="strip-action">Retry today before 10am</span>
+        <div style="display:flex;align-items:center;gap:10px;margin-left:auto">
+          <div class="rec-summary-inline">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#6AB04C" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            <span id="rec-summary-text"><strong>£920 recovered</strong> · 71% rate this month</span>
           </div>
-          <div class="strip-sep"></div>
-          <div class="strip-item">
-            <div class="strip-dot" style="background:var(--green)"></div>
-            <span class="strip-name">Michael Mitchell</span>
-            <span style="color:var(--muted)">·</span>
-            <span>£320 · Invoice</span>
-            <span style="color:var(--muted)">·</span>
-            <span class="strip-action">Send payment link via email</span>
-          </div>
-          <div class="strip-sep"></div>
-          <div class="strip-item" style="color:var(--muted)">
-            +5 more items ranked below
-          </div>
+          <button class="close-queue-btn" onclick="toggleQueue()">← Back</button>
         </div>
       </div>
 
-      <!-- ALL PAYMENTS -->
+      <div class="rec-card">
+        <div class="rec-card-header">
+          <span style="font-size:13px;font-weight:600">Recovery queue</span>
+          <span class="ai-chip">✦ AI scored</span>
+          <span class="sel-count" id="sel-count"></span>
+          <button class="recover-sel-btn" id="recover-sel-btn" onclick="recoverSelected()">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.85"/></svg>
+            Recover selected
+          </button>
+          <span style="margin-left:auto;font-size:12px;color:var(--muted)" id="rec-count-label">7 items · £1,840 total</span>
+        </div>
+        <table class="qt">
+          <thead><tr><th><input type="checkbox" class="select-all-check" id="select-all" onclick="toggleSelectAll(this)"></th><th>Customer</th><th>Type</th><th>Amount</th><th>Days overdue</th><th>AI recoverability</th><th>AI recommends</th><th>Action</th></tr></thead>
+          <tbody>
+
+            <tr class="qr" id="qr-1">
+              <td><input type="checkbox" class="row-check" data-id="1" onchange="updateSelection()"></td>
+              <td><div class="cname">Sarah Johnson</div><div class="cemail">sarah.johnson@gmail.com</div></td>
+              <td><span class="bdg b-red">Failed DD</span></td>
+              <td><strong>£480</strong></td><td>3 days</td>
+              <td><div class="score-wrap s-high"><div class="score-lbl">High · 92%</div><div class="score-bg"><div class="score-fill" style="width:92%"></div></div></div></td>
+              <td><span class="rec-act">Retry today · before 10am</span></td>
+              <td id="act-1"><button class="abtn pri" onclick="openConf(1)">Retry DD</button></td>
+            </tr>
+            <tr class="conf-row" id="conf-1"><td colspan="7" ><div class="conf-panel">
+              <div class="conf-title">Retry Direct Debit — Sarah Johnson</div>
+              <div class="conf-ai"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/></svg>AI recommends retrying before 10am — her account is historically funded in the morning.</div>
+              <div class="conf-desc">Amount: <strong>£480</strong><br>We'll attempt to collect via her saved mandate. If it fails, you'll be notified immediately.</div>
+              <div class="conf-acts"><button class="csend" onclick="doAction(1,'Sarah Johnson','DD retried',480)">Retry now</button><button class="ccancel" onclick="closeConf(1)">Cancel</button></div>
+            </div></td></tr>
+
+            <tr class="qr" id="qr-2">
+              <td><input type="checkbox" class="row-check" data-id="2" onchange="updateSelection()"></td>
+              <td><div class="cname">Michael Mitchell</div><div class="cemail">mike.mitchell@gmail.com</div></td>
+              <td><span class="bdg b-amber">Invoice</span></td>
+              <td><strong>£320</strong></td><td>8 days</td>
+              <td><div class="score-wrap s-high"><div class="score-lbl">High · 85%</div><div class="score-bg"><div class="score-fill" style="width:85%"></div></div></div></td>
+              <td><span class="rec-act">Email · payment link</span></td>
+              <td id="act-2"><button class="abtn pri" onclick="openConf(2)">Send payment link</button></td>
+            </tr>
+            <tr class="conf-row" id="conf-2"><td colspan="7" ><div class="conf-panel">
+              <div class="conf-title">Send payment link — Michael Mitchell</div>
+              <div class="conf-ai"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/></svg>AI recommends email — Michael has responded to 3 of 3 previous email reminders.</div>
+              <div class="conf-desc">Amount: <strong>£320</strong><br>A payment link will be sent to <strong>mike.mitchell@gmail.com</strong>.</div>
+              <div class="conf-acts"><button class="csend" onclick="doAction(2,'Michael Mitchell','Payment link sent',320)">Send now</button><button class="ccancel" onclick="closeConf(2)">Cancel</button></div>
+            </div></td></tr>
+
+            <tr class="qr" id="qr-3">
+              <td><input type="checkbox" class="row-check" data-id="3" onchange="updateSelection()"></td>
+              <td><div class="cname">Robert Parker</div><div class="cemail">robert.parker@gmail.com</div></td>
+              <td><span class="bdg b-orange">Dispute</span></td>
+              <td><strong>£380</strong></td><td>5 days</td>
+              <td><div class="score-wrap s-mid"><div class="score-lbl">Medium · 55%</div><div class="score-bg"><div class="score-fill" style="width:55%"></div></div></div></td>
+              <td><span class="rec-act">Submit evidence · urgent</span></td>
+              <td id="act-3"><button class="abtn" onclick="openConf(3)">Submit evidence</button></td>
+            </tr>
+            <tr class="conf-row" id="conf-3"><td colspan="7" ><div class="conf-panel">
+              <div class="conf-title">Submit dispute evidence — Robert Parker</div>
+              <div class="conf-ai"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/></svg>AI has pre-compiled evidence from transaction data. Deadline: 3 days remaining.</div>
+              <div class="conf-desc">Amount: <strong>£380</strong><br>Review and submit to the scheme.</div>
+              <div class="conf-acts"><button class="csend" onclick="doAction(3,'Robert Parker','Evidence submitted',380)">Submit evidence</button><button class="ccancel" onclick="closeConf(3)">Cancel</button></div>
+            </div></td></tr>
+
+            <tr class="qr" id="qr-4">
+              <td><input type="checkbox" class="row-check" data-id="4" onchange="updateSelection()"></td>
+              <td><div class="cname">Lisa O'Connor</div><div class="cemail">lisa.oconnor@gmail.com</div></td>
+              <td><span class="bdg b-blue">Abandoned</span></td>
+              <td><strong>£240</strong></td><td>1 day</td>
+              <td><div class="score-wrap s-mid"><div class="score-lbl">Medium · 61%</div><div class="score-bg"><div class="score-fill" style="width:61%"></div></div></div></td>
+              <td><span class="rec-act">SMS reminder · evening</span></td>
+              <td id="act-4"><button class="abtn" onclick="openConf(4)">Send reminder</button></td>
+            </tr>
+            <tr class="conf-row" id="conf-4"><td colspan="7" ><div class="conf-panel">
+              <div class="conf-title">Send checkout reminder — Lisa O'Connor</div>
+              <div class="conf-ai"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/></svg>AI recommends SMS at 6pm — Lisa responds outside work hours.</div>
+              <div class="conf-desc">Amount: <strong>£240</strong><br>Reminder with pre-filled checkout to <strong>lisa.oconnor@gmail.com</strong>.</div>
+              <div class="conf-acts"><button class="csend" onclick="doAction(4,'Lisa O\'Connor','Reminder sent',240)">Send now</button><button class="ccancel" onclick="closeConf(4)">Cancel</button></div>
+            </div></td></tr>
+
+            <tr class="qr" id="qr-5">
+              <td><input type="checkbox" class="row-check" data-id="5" onchange="updateSelection()"></td>
+              <td><div class="cname">Amanda Miller</div><div class="cemail">amanda.miller@hotmail.com</div></td>
+              <td><span class="bdg b-amber">Invoice</span></td>
+              <td><strong>£180</strong></td><td>12 days</td>
+              <td><div class="score-wrap s-low"><div class="score-lbl">Low · 28%</div><div class="score-bg"><div class="score-fill" style="width:28%"></div></div></div></td>
+              <td><span class="rec-act">Email reminder</span></td>
+              <td id="act-5"><button class="abtn" onclick="openConf(5)">Send payment link</button></td>
+            </tr>
+            <tr class="conf-row" id="conf-5"><td colspan="7" ><div class="conf-panel">
+              <div class="conf-title">Send payment link — Amanda Miller</div>
+              <div class="conf-ai"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/></svg>Low score — Amanda has not responded to 2 previous reminders.</div>
+              <div class="conf-desc">Amount: <strong>£180</strong><br>Payment link to <strong>amanda.miller@hotmail.com</strong>.</div>
+              <div class="conf-acts"><button class="csend" onclick="doAction(5,'Amanda Miller','Payment link sent',180)">Send anyway</button><button class="ccancel" onclick="closeConf(5)">Cancel</button></div>
+            </div></td></tr>
+
+            <tr class="qr" id="qr-6">
+              <td><input type="checkbox" class="row-check" data-id="6" onchange="updateSelection()"></td>
+              <td><div class="cname">David Thompson</div><div class="cemail">david.thompson@icloud.com</div></td>
+              <td><span class="bdg b-red">Failed DD</span></td>
+              <td><strong>£160</strong></td><td>6 days</td>
+              <td><div class="score-wrap s-low"><div class="score-lbl">Low · 32%</div><div class="score-bg"><div class="score-fill" style="width:32%"></div></div></div></td>
+              <td><span class="rec-act">Wait 2 days · then retry</span></td>
+              <td id="act-6"><button class="abtn" onclick="openConf(6)">Retry DD</button></td>
+            </tr>
+            <tr class="conf-row" id="conf-6"><td colspan="7" ><div class="conf-panel">
+              <div class="conf-title">Retry Direct Debit — David Thompson</div>
+              <div class="conf-ai"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/></svg>AI suggests waiting 2 days — David's funds typically clear mid-week.</div>
+              <div class="conf-desc">Amount: <strong>£160</strong><br>Retry via saved mandate.</div>
+              <div class="conf-acts"><button class="csend" onclick="doAction(6,'David Thompson','DD retried',160)">Retry now</button><button class="ccancel" onclick="closeConf(6)">Cancel</button></div>
+            </div></td></tr>
+
+            <tr class="qr" id="qr-7">
+              <td><input type="checkbox" class="row-check" data-id="7" onchange="updateSelection()"></td>
+              <td><div class="cname">Jenny Walsh</div><div class="cemail">jenny.walsh@gmail.com</div></td>
+              <td><span class="bdg b-blue">Abandoned</span></td>
+              <td><strong>£80</strong></td><td>2 days</td>
+              <td><div class="score-wrap s-mid"><div class="score-lbl">Medium · 58%</div><div class="score-bg"><div class="score-fill" style="width:58%"></div></div></div></td>
+              <td><span class="rec-act">Email · pre-filled checkout</span></td>
+              <td id="act-7"><button class="abtn" onclick="openConf(7)">Send reminder</button></td>
+            </tr>
+            <tr class="conf-row" id="conf-7"><td colspan="7" ><div class="conf-panel">
+              <div class="conf-title">Send reminder — Jenny Walsh</div>
+              <div class="conf-ai"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/></svg>Jenny abandoned at the payment method step — pre-filled checkout removes that friction.</div>
+              <div class="conf-desc">Amount: <strong>£80</strong><br>Checkout reminder to <strong>jenny.walsh@gmail.com</strong>.</div>
+              <div class="conf-acts"><button class="csend" onclick="doAction(7,'Jenny Walsh','Reminder sent',80)">Send now</button><button class="ccancel" onclick="closeConf(7)">Cancel</button></div>
+            </div></td></tr>
+
+          </tbody>
+        </table>
+
+        <!-- AUTOMATION TOGGLE -->
+        <div class="auto-row">
+          <div class="auto-txt">
+            <div class="auto-title">Automated recovery</div>
+            <div class="auto-sub">When on, AI will automatically execute High-score actions. You'll be notified of every action taken.</div>
+          </div>
+          <div class="tgl-ctrl" id="auto-tgl" onclick="this.classList.toggle('on')"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TRANSACTION LIST (hidden when queue is open) -->
+    <div id="txn-section">
       <div class="txn-card">
         <div class="txn-hdr">
           <span style="font-size:14px;font-weight:700">Payments</span>
@@ -333,163 +436,6 @@ body { font-family:'Segoe UI',system-ui,sans-serif; background:var(--bg); color:
       </div>
     </div>
 
-    <!-- ═══ RECOVERY VIEW ═══ -->
-    <div class="view" id="view-recovery">
-
-      <div class="phase-banner">
-        <span class="phase-pill">Phase 2</span>
-        <span>Rank &amp; Recommend — AI scoring, prioritised queue, proactive alerts</span>
-      </div>
-
-      <div style="display:flex;align-items:center;gap:12px">
-        <div class="back-btn" onclick="showView('payments')">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
-          Payments
-        </div>
-        <div>
-          <div class="rec-view-title">Revenue at Risk</div>
-          <div class="rec-view-sub" id="rec-view-sub">7 items · £1,840 at risk · AI-ranked by recoverability</div>
-        </div>
-      </div>
-
-      <!-- RECOVERY SUMMARY -->
-      <div class="rec-summary">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6AB04C" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-        <span id="rec-summary-text"><strong>Recovered this month: £920 across 4 items</strong> · Recovery rate: 71%</span>
-      </div>
-
-      <!-- RECOVERY TABLE -->
-      <div class="rec-card">
-        <div class="rec-card-header">
-          <span style="font-size:13px;font-weight:600">AI-ranked recovery queue</span>
-          <span class="ai-chip">✦ AI scored</span>
-          <span style="margin-left:auto;font-size:12px;color:var(--muted)" id="rec-count-label">7 items · £1,840 total</span>
-        </div>
-
-        <table class="qt">
-          <thead><tr><th>Customer</th><th>Type</th><th>Amount</th><th>Days overdue</th><th>AI recoverability</th><th>AI recommends</th><th>Action</th></tr></thead>
-          <tbody>
-
-            <tr class="qr" id="qr-1">
-              <td><div class="cname">Sarah Johnson</div><div class="cemail">sarah.johnson@gmail.com</div></td>
-              <td><span class="bdg b-red">Failed DD</span></td>
-              <td><strong>£480</strong></td><td>3 days</td>
-              <td><div class="score-wrap s-high"><div class="score-lbl">High · 92%</div><div class="score-bg"><div class="score-fill" style="width:92%"></div></div></div></td>
-              <td><span class="rec-act">Retry today · before 10am</span></td>
-              <td id="act-1"><button class="abtn pri" onclick="openConf(1)">Retry DD</button></td>
-            </tr>
-            <tr class="conf-row" id="conf-1"><td colspan="7"><div class="conf-panel">
-              <div class="conf-title">Retry Direct Debit — Sarah Johnson</div>
-              <div class="conf-ai"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/></svg>AI recommends retrying before 10am — her account is historically funded in the morning.</div>
-              <div class="conf-desc">Amount: <strong>£480</strong><br>We'll attempt to collect via her saved mandate. If it fails, you'll be notified immediately.</div>
-              <div class="conf-acts"><button class="csend" onclick="doAction(1,'Sarah Johnson','DD retried',480)">Retry now</button><button class="ccancel" onclick="closeConf(1)">Cancel</button></div>
-            </div></td></tr>
-
-            <tr class="qr" id="qr-2">
-              <td><div class="cname">Michael Mitchell</div><div class="cemail">mike.mitchell@gmail.com</div></td>
-              <td><span class="bdg b-amber">Invoice</span></td>
-              <td><strong>£320</strong></td><td>8 days</td>
-              <td><div class="score-wrap s-high"><div class="score-lbl">High · 85%</div><div class="score-bg"><div class="score-fill" style="width:85%"></div></div></div></td>
-              <td><span class="rec-act">Email · payment link</span></td>
-              <td id="act-2"><button class="abtn pri" onclick="openConf(2)">Send payment link</button></td>
-            </tr>
-            <tr class="conf-row" id="conf-2"><td colspan="7"><div class="conf-panel">
-              <div class="conf-title">Send payment link — Michael Mitchell</div>
-              <div class="conf-ai"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/></svg>AI recommends email — Michael has responded to 3 of 3 previous email reminders.</div>
-              <div class="conf-desc">Amount: <strong>£320</strong><br>A payment link will be sent to <strong>mike.mitchell@gmail.com</strong>.</div>
-              <div class="conf-acts"><button class="csend" onclick="doAction(2,'Michael Mitchell','Payment link sent',320)">Send now</button><button class="ccancel" onclick="closeConf(2)">Cancel</button></div>
-            </div></td></tr>
-
-            <tr class="qr" id="qr-3">
-              <td><div class="cname">Robert Parker</div><div class="cemail">robert.parker@gmail.com</div></td>
-              <td><span class="bdg b-orange">Dispute</span></td>
-              <td><strong>£380</strong></td><td>5 days</td>
-              <td><div class="score-wrap s-mid"><div class="score-lbl">Medium · 55%</div><div class="score-bg"><div class="score-fill" style="width:55%"></div></div></div></td>
-              <td><span class="rec-act">Submit evidence · urgent</span></td>
-              <td id="act-3"><button class="abtn" onclick="openConf(3)">Submit evidence</button></td>
-            </tr>
-            <tr class="conf-row" id="conf-3"><td colspan="7"><div class="conf-panel">
-              <div class="conf-title">Submit dispute evidence — Robert Parker</div>
-              <div class="conf-ai"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/></svg>AI has pre-compiled evidence from transaction data and attendance records. 3 days remaining.</div>
-              <div class="conf-desc">Amount: <strong>£380</strong><br>Review the AI-compiled evidence package and submit to the scheme.</div>
-              <div class="conf-acts"><button class="csend" onclick="doAction(3,'Robert Parker','Evidence submitted',380)">Submit evidence</button><button class="ccancel" onclick="closeConf(3)">Cancel</button></div>
-            </div></td></tr>
-
-            <tr class="qr" id="qr-4">
-              <td><div class="cname">Lisa O'Connor</div><div class="cemail">lisa.oconnor@gmail.com</div></td>
-              <td><span class="bdg b-blue">Abandoned</span></td>
-              <td><strong>£240</strong></td><td>1 day</td>
-              <td><div class="score-wrap s-mid"><div class="score-lbl">Medium · 61%</div><div class="score-bg"><div class="score-fill" style="width:61%"></div></div></div></td>
-              <td><span class="rec-act">SMS reminder · evening</span></td>
-              <td id="act-4"><button class="abtn" onclick="openConf(4)">Send reminder</button></td>
-            </tr>
-            <tr class="conf-row" id="conf-4"><td colspan="7"><div class="conf-panel">
-              <div class="conf-title">Send checkout reminder — Lisa O'Connor</div>
-              <div class="conf-ai"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/></svg>AI recommends SMS at 6pm — Lisa responds to SMS outside work hours.</div>
-              <div class="conf-desc">Amount: <strong>£240</strong><br>Reminder with pre-filled checkout to <strong>lisa.oconnor@gmail.com</strong>.</div>
-              <div class="conf-acts"><button class="csend" onclick="doAction(4,'Lisa O\'Connor','Reminder sent',240)">Send now</button><button class="ccancel" onclick="closeConf(4)">Cancel</button></div>
-            </div></td></tr>
-
-            <tr class="qr" id="qr-5">
-              <td><div class="cname">Amanda Miller</div><div class="cemail">amanda.miller@hotmail.com</div></td>
-              <td><span class="bdg b-amber">Invoice</span></td>
-              <td><strong>£180</strong></td><td>12 days</td>
-              <td><div class="score-wrap s-low"><div class="score-lbl">Low · 28%</div><div class="score-bg"><div class="score-fill" style="width:28%"></div></div></div></td>
-              <td><span class="rec-act">Email reminder</span></td>
-              <td id="act-5"><button class="abtn" onclick="openConf(5)">Send payment link</button></td>
-            </tr>
-            <tr class="conf-row" id="conf-5"><td colspan="7"><div class="conf-panel">
-              <div class="conf-title">Send payment link — Amanda Miller</div>
-              <div class="conf-ai"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/></svg>Low score — Amanda has not responded to 2 previous reminders. Consider a direct call.</div>
-              <div class="conf-desc">Amount: <strong>£180</strong><br>Payment link to <strong>amanda.miller@hotmail.com</strong>.</div>
-              <div class="conf-acts"><button class="csend" onclick="doAction(5,'Amanda Miller','Payment link sent',180)">Send anyway</button><button class="ccancel" onclick="closeConf(5)">Cancel</button></div>
-            </div></td></tr>
-
-            <tr class="qr" id="qr-6">
-              <td><div class="cname">David Thompson</div><div class="cemail">david.thompson@icloud.com</div></td>
-              <td><span class="bdg b-red">Failed DD</span></td>
-              <td><strong>£160</strong></td><td>6 days</td>
-              <td><div class="score-wrap s-low"><div class="score-lbl">Low · 32%</div><div class="score-bg"><div class="score-fill" style="width:32%"></div></div></div></td>
-              <td><span class="rec-act">Wait 2 days · then retry</span></td>
-              <td id="act-6"><button class="abtn" onclick="openConf(6)">Retry DD</button></td>
-            </tr>
-            <tr class="conf-row" id="conf-6"><td colspan="7"><div class="conf-panel">
-              <div class="conf-title">Retry Direct Debit — David Thompson</div>
-              <div class="conf-ai"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/></svg>AI suggests waiting 2 days — David's funds typically clear mid-week. Retry now overrides this.</div>
-              <div class="conf-desc">Amount: <strong>£160</strong><br>Retry via saved mandate.</div>
-              <div class="conf-acts"><button class="csend" onclick="doAction(6,'David Thompson','DD retried',160)">Retry now</button><button class="ccancel" onclick="closeConf(6)">Cancel</button></div>
-            </div></td></tr>
-
-            <tr class="qr" id="qr-7">
-              <td><div class="cname">Jenny Walsh</div><div class="cemail">jenny.walsh@gmail.com</div></td>
-              <td><span class="bdg b-blue">Abandoned</span></td>
-              <td><strong>£80</strong></td><td>2 days</td>
-              <td><div class="score-wrap s-mid"><div class="score-lbl">Medium · 58%</div><div class="score-bg"><div class="score-fill" style="width:58%"></div></div></div></td>
-              <td><span class="rec-act">Email · pre-filled checkout</span></td>
-              <td id="act-7"><button class="abtn" onclick="openConf(7)">Send reminder</button></td>
-            </tr>
-            <tr class="conf-row" id="conf-7"><td colspan="7"><div class="conf-panel">
-              <div class="conf-title">Send reminder — Jenny Walsh</div>
-              <div class="conf-ai"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/></svg>Jenny abandoned at the payment method step — pre-filled checkout will skip that friction.</div>
-              <div class="conf-desc">Amount: <strong>£80</strong><br>Checkout reminder to <strong>jenny.walsh@gmail.com</strong>.</div>
-              <div class="conf-acts"><button class="csend" onclick="doAction(7,'Jenny Walsh','Reminder sent',80)">Send now</button><button class="ccancel" onclick="closeConf(7)">Cancel</button></div>
-            </div></td></tr>
-
-          </tbody>
-        </table>
-
-        <!-- AUTOMATION TOGGLE -->
-        <div class="auto-row">
-          <div class="auto-txt">
-            <div class="auto-title">Automated recovery</div>
-            <div class="auto-sub">When on, AI will automatically execute High-score actions. You'll be notified of every action taken.</div>
-          </div>
-          <div class="tgl-ctrl" id="auto-tgl" onclick="this.classList.toggle('on')"></div>
-        </div>
-
-      </div>
-    </div>
-
   </main>
 </div>
 
@@ -500,14 +446,15 @@ body { font-family:'Segoe UI',system-ui,sans-serif; background:var(--bg); color:
 
 <script>
   let activeConf=null, recAmt=920, atRisk=1840, count=7;
+  let queueOpen=false;
 
-  // Push notification
-  setTimeout(()=>document.getElementById('push').classList.add('show'), 900);
-  setTimeout(()=>document.getElementById('push').classList.remove('show'), 5500);
-
-  function showView(v) {
-    document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));
-    document.getElementById('view-'+v).classList.add('active');
+  function toggleQueue() {
+    queueOpen = !queueOpen;
+    document.getElementById('rec-inline').style.display = queueOpen ? 'flex' : 'none';
+    document.getElementById('rec-inline').style.flexDirection = 'column';
+    document.getElementById('rec-inline').style.gap = '12px';
+    document.getElementById('txn-section').style.display = queueOpen ? 'none' : 'block';
+    document.getElementById('alert-btn').textContent = queueOpen ? '← Back' : 'View Recovery Queue';
   }
 
   function openConf(id) {
@@ -528,15 +475,74 @@ body { font-family:'Segoe UI',system-ui,sans-serif; background:var(--bg); color:
   function doAction(id, name, label, amt) {
     closeConf(id);
     document.getElementById('qr-'+id).classList.add('actioned');
+    document.getElementById('qr-'+id).classList.remove('selected');
+    const cb = document.querySelector('.row-check[data-id="'+id+'"]');
+    if(cb) { cb.checked = false; cb.disabled = true; }
     document.getElementById('act-'+id).innerHTML='<span class="in-rec"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> In recovery</span>';
     recAmt+=amt; atRisk-=amt; count--;
     const pct=Math.round(recAmt/(recAmt+atRisk)*100);
-    document.getElementById('insight-amt').textContent='£'+atRisk.toLocaleString();
-    document.getElementById('insight-items').textContent=count+' items at risk';
-    document.getElementById('rec-view-sub').textContent=count+' items · £'+atRisk.toLocaleString()+' at risk · AI-ranked by recoverability';
+    document.getElementById('alert-amt').textContent=atRisk.toLocaleString();
+    document.getElementById('alert-count').textContent=count;
+    document.getElementById('rec-sub').textContent=count+' items · £'+atRisk.toLocaleString()+' at risk · ranked by AI recoverability score';
     document.getElementById('rec-count-label').textContent=count+' items · £'+atRisk.toLocaleString()+' total';
-    document.getElementById('rec-summary-text').innerHTML='<strong>Recovered this month: £'+recAmt.toLocaleString()+' across '+(4+(7-count))+' items</strong> · Recovery rate: '+pct+'%';
+    document.getElementById('rec-summary-text').innerHTML='<strong>£'+recAmt.toLocaleString()+' recovered</strong> · '+pct+'% rate this month';
     showToast(label+' — '+name);
+  }
+
+  function updateSelection() {
+    const checked = document.querySelectorAll('.row-check:checked');
+    const btn = document.getElementById('recover-sel-btn');
+    const cnt = document.getElementById('sel-count');
+    const selectAll = document.getElementById('select-all');
+    const allChecks = document.querySelectorAll('.row-check:not(:disabled)');
+
+    // highlight selected rows
+    document.querySelectorAll('.row-check').forEach(cb => {
+      document.getElementById('qr-'+cb.dataset.id).classList.toggle('selected', cb.checked);
+    });
+
+    if(checked.length > 0) {
+      btn.classList.add('visible');
+      cnt.textContent = checked.length + ' selected';
+      cnt.classList.add('visible');
+      btn.textContent = '';
+      btn.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.85"/></svg> Recover ' + checked.length + ' item' + (checked.length > 1 ? 's' : '');
+    } else {
+      btn.classList.remove('visible');
+      cnt.classList.remove('visible');
+    }
+
+    // sync select-all state
+    selectAll.indeterminate = checked.length > 0 && checked.length < allChecks.length;
+    selectAll.checked = checked.length === allChecks.length && allChecks.length > 0;
+  }
+
+  function toggleSelectAll(cb) {
+    document.querySelectorAll('.row-check:not(:disabled)').forEach(check => {
+      check.checked = cb.checked;
+    });
+    updateSelection();
+  }
+
+  function recoverSelected() {
+    const checked = [...document.querySelectorAll('.row-check:checked')];
+    const amounts = {1:480,2:320,3:380,4:240,5:180,6:160,7:80};
+    const labels  = {1:'DD retried',2:'Payment link sent',3:'Evidence submitted',4:'Reminder sent',5:'Payment link sent',6:'DD retried',7:'Reminder sent'};
+    const names   = {1:'Sarah Johnson',2:'Michael Mitchell',3:'Robert Parker',4:"Lisa O'Connor",5:'Amanda Miller',6:'David Thompson',7:'Jenny Walsh'};
+
+    checked.forEach(cb => {
+      const id = parseInt(cb.dataset.id);
+      cb.disabled = true;
+      doAction(id, names[id], labels[id], amounts[id]);
+    });
+
+    // reset selection UI
+    document.getElementById('select-all').checked = false;
+    document.getElementById('select-all').indeterminate = false;
+    document.getElementById('recover-sel-btn').classList.remove('visible');
+    document.getElementById('sel-count').classList.remove('visible');
+
+    showToast(checked.length + ' item' + (checked.length > 1 ? 's' : '') + ' sent to recovery');
   }
 
   function showToast(msg) {
